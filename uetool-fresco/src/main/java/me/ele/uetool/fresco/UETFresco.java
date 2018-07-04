@@ -31,14 +31,14 @@ import static me.ele.uetool.base.DimenUtil.px2dip;
 public class UETFresco implements IAttrs {
 
     @Override
-    public List<Item> getAttrs(Element element) {
+    public List<Item> getAttrs(Element element, boolean usePxUnit) {
         List<Item> items = new ArrayList<>();
 
         View view = element.getView();
 
         if (view instanceof DraweeView) {
             items.add(new TitleItem("DraweeView"));
-            items.add(new TextItem("CornerRadius", getCornerRadius((DraweeView) view)));
+            items.add(new TextItem("CornerRadius", getCornerRadius((DraweeView) view, usePxUnit)));
             items.add(new TextItem("ImageURI", getImageURI((DraweeView) view), true));
             items.add(new TextItem("ActualScaleType", getScaleType((DraweeView) view), true));
             items.add(new TextItem("IsSupportAnimation", isSupportAnimation((DraweeView) view)));
@@ -48,7 +48,7 @@ public class UETFresco implements IAttrs {
         return items;
     }
 
-    private String getCornerRadius(DraweeView draweeView) {
+    private String getCornerRadius(DraweeView draweeView, boolean usePxUnit) {
         GenericDraweeHierarchy hierarchy = getGenericDraweeHierarchy(draweeView);
         if (hierarchy != null) {
             RoundingParams params = hierarchy.getRoundingParams();
@@ -60,7 +60,8 @@ public class UETFresco implements IAttrs {
                         return null;
                     }
                 }
-                return px2dip(firstRadii, true);
+                return usePxUnit ? String.valueOf(((int) firstRadii)) + "px" :
+                        px2dip(firstRadii, true);
             }
         }
         return null;

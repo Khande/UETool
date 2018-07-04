@@ -11,7 +11,7 @@ import me.ele.uetool.base.item.TextItem;
 public class CustomAttribution implements IAttrs {
 
     @Override
-    public List<Item> getAttrs(Element element) {
+    public List<Item> getAttrs(Element element, boolean usePxUnit) {
         List<Item> items = new ArrayList<>();
         if (element.getView() instanceof CustomView) {
             CustomView view = (CustomView) element.getView();

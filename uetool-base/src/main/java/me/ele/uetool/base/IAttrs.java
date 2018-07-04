@@ -6,5 +6,5 @@ import me.ele.uetool.base.item.Item;
 
 public interface IAttrs {
 
-    List<Item> getAttrs(Element element);
+    List<Item> getAttrs(Element element, boolean usePxUnit);
 }

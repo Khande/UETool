@@ -176,10 +176,10 @@ public class EditAttrLayout extends CollectViewsLayout {
                         }
 
                         @Override
-                        public void selectView(Element element) {
+                        public void selectView(Element element, boolean usePxUnit) {
                             targetElement = element;
                             dialog.dismiss();
-                            dialog.show(targetElement);
+                            dialog.show(targetElement, usePxUnit);
                         }
                     });
                     dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -192,7 +192,7 @@ public class EditAttrLayout extends CollectViewsLayout {
                         }
                     });
                 }
-                dialog.show(targetElement);
+                dialog.show(targetElement, true);
             }
         }
     }

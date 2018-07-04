@@ -73,7 +73,7 @@ public class AttrsDialog extends Dialog {
         vList.setLayoutManager(layoutManager);
     }
 
-    public void show(Element element) {
+    public void show(Element element, boolean usePxUnit) {
         show();
         Window dialogWindow = getWindow();
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
@@ -83,7 +83,7 @@ public class AttrsDialog extends Dialog {
         lp.width = getScreenWidth() - dip2px(30);
         lp.height = getScreenHeight() / 2;
         dialogWindow.setAttributes(lp);
-        adapter.notifyDataSetChanged(element);
+        adapter.notifyDataSetChanged(element, usePxUnit);
         layoutManager.scrollToPosition(0);
     }
 
@@ -109,7 +109,7 @@ public class AttrsDialog extends Dialog {
 
         void showValidViews(int position, boolean isChecked);
 
-        void selectView(Element element);
+        void selectView(Element element, boolean usePxUnit);
     }
 
     public static class Adapter extends RecyclerView.Adapter {
@@ -122,12 +122,12 @@ public class AttrsDialog extends Dialog {
             this.callback = callback;
         }
 
-        public void notifyDataSetChanged(Element element) {
+        public void notifyDataSetChanged(Element element, boolean usePxUnit) {
             items.clear();
             for (String attrsProvider : UETool.getInstance().getAttrsProvider()) {
                 try {
                     IAttrs attrs = (IAttrs) Class.forName(attrsProvider).newInstance();
-                    items.addAll(attrs.getAttrs(element));
+                    items.addAll(attrs.getAttrs(element, usePxUnit));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -395,7 +395,7 @@ public class AttrsDialog extends Dialog {
                 vName = itemView.findViewById(R.id.name);
                 vDetail = itemView.findViewById(R.id.detail);
                 vColor = itemView.findViewById(R.id.color);
-                vDetail.addTextChangedListener(textWatcher);
+                // vDetail.addTextChangedListener(textWatcher);
             }
 
             public static EditTextViewHolder newInstance(ViewGroup parent) {
@@ -477,21 +477,29 @@ public class AttrsDialog extends Dialog {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         try {
-                            if (item.getType() == SwitchItem.Type.TYPE_MOVE) {
+                            int itemType = item.getType();
+                            if (itemType == SwitchItem.Type.TYPE_MOVE) {
                                 if (callback != null && isChecked) {
                                     callback.enableMove();
                                 }
                                 return;
-                            } else if (item.getType() == SwitchItem.Type.TYPE_SHOW_VALID_VIEWS) {
+                            } else if (itemType == SwitchItem.Type.TYPE_SHOW_VALID_VIEWS) {
                                 item.setChecked(isChecked);
                                 if (callback != null) {
                                     callback.showValidViews(getAdapterPosition(), isChecked);
                                 }
                                 return;
+                            } else if (itemType == SwitchItem.Type.TYPE_PX_OR_DP) {
+
+                                if (callback != null) {
+                                    callback.selectView(item.getElement(), !isChecked);
+                                }
+                                return;
                             }
+
                             if (item.getElement().getView() instanceof TextView) {
                                 TextView textView = ((TextView) (item.getElement().getView()));
-                                if (item.getType() == SwitchItem.Type.TYPE_IS_BOLD) {
+                                if (itemType == SwitchItem.Type.TYPE_IS_BOLD) {
                                     textView.setTypeface(null, isChecked ? Typeface.BOLD : Typeface.NORMAL);
                                 }
                             }
@@ -564,7 +572,7 @@ public class AttrsDialog extends Dialog {
                     @Override
                     public void onClick(View v) {
                         if (callback != null) {
-                            callback.selectView(item.getElement());
+                            callback.selectView(item.getElement(), true);
                         }
                     }
                 });

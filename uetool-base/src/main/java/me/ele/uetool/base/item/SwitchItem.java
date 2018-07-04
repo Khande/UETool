@@ -9,6 +9,7 @@ import me.ele.uetool.base.Element;
 
 import static me.ele.uetool.base.item.SwitchItem.Type.TYPE_IS_BOLD;
 import static me.ele.uetool.base.item.SwitchItem.Type.TYPE_MOVE;
+import static me.ele.uetool.base.item.SwitchItem.Type.TYPE_PX_OR_DP;
 import static me.ele.uetool.base.item.SwitchItem.Type.TYPE_SHOW_VALID_VIEWS;
 
 public class SwitchItem extends ElementItem {
@@ -44,11 +45,13 @@ public class SwitchItem extends ElementItem {
             TYPE_IS_BOLD,
             TYPE_MOVE,
             TYPE_SHOW_VALID_VIEWS,
+            TYPE_PX_OR_DP
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
         int TYPE_IS_BOLD = 1;
         int TYPE_MOVE = 2;
         int TYPE_SHOW_VALID_VIEWS = 3;
+        int TYPE_PX_OR_DP = 4;
     }
 }
