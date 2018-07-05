@@ -277,12 +277,14 @@ public class CollectViewsLayout extends View {
 
         if (startX == endX) {
             drawLineWithEndPoint(canvas, startX, startY + endPointSpace, endX, endY - endPointSpace);
-            String text = px2dip(endY - startY, true);
-            drawText(canvas, text, startX + textLineDistance, startY + (endY - startY) / 2 + getTextHeight(text) / 2);
+            int height = endY - startY;
+            String text = height + "px/" + px2dip(height, true);
+            drawText(canvas, text, startX + textLineDistance, startY + (height) / 2 + getTextHeight(text) / 2);
         } else if (startY == endY) {
             drawLineWithEndPoint(canvas, startX + endPointSpace, startY, endX - endPointSpace, endY);
-            String text = px2dip(endX - startX, true);
-            drawText(canvas, text, startX + (endX - startX) / 2 - getTextWidth(text) / 2, startY - textLineDistance);
+            int width = endX - startX;
+            String text = width + "px/" + px2dip(width, true);
+            drawText(canvas, text, startX + (width) / 2 - getTextWidth(text) / 2, startY - textLineDistance);
         }
     }
 
