@@ -15,6 +15,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,7 @@ import static me.ele.uetool.AttrsDialog.Adapter.ViewType.TYPE_TITLE;
 import static me.ele.uetool.base.DimenUtil.dip2px;
 import static me.ele.uetool.base.DimenUtil.getScreenHeight;
 import static me.ele.uetool.base.DimenUtil.getScreenWidth;
+import static me.ele.uetool.base.DimenUtil.px2sp;
 
 public class AttrsDialog extends Dialog {
 
@@ -322,6 +324,7 @@ public class AttrsDialog extends Dialog {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     try {
+                        final boolean usePxUnit = item.isUsePxUnit();
                         if (item.getType() == EditTextItem.Type.TYPE_TEXT) {
                             TextView textView = ((TextView) (item.getElement().getView()));
                             if (!TextUtils.equals(textView.getText().toString(), s.toString())) {
@@ -329,9 +332,16 @@ public class AttrsDialog extends Dialog {
                             }
                         } else if (item.getType() == EditTextItem.Type.TYPE_TEXT_SIZE) {
                             TextView textView = ((TextView) (item.getElement().getView()));
-                            float textSize = Float.valueOf(s.toString());
-                            if (textView.getTextSize() != textSize) {
-                                textView.setTextSize(textSize);
+
+                            float textSizeInPx = textView.getTextSize();
+                            String originalTextSizeText = usePxUnit ? String.valueOf((int)textSizeInPx) : px2sp
+                                    (textSizeInPx);
+
+                            String targetTextSizeText = s.toString();
+                            if (!TextUtils.equals(originalTextSizeText, targetTextSizeText)) {
+                                float targetTextSize = Float.valueOf(targetTextSizeText);
+                                textView.setTextSize(usePxUnit ? TypedValue.COMPLEX_UNIT_PX : TypedValue.COMPLEX_UNIT_DIP,
+                                        targetTextSize);
                             }
                         } else if (item.getType() == EditTextItem.Type.TYPE_TEXT_COLOR) {
                             TextView textView = ((TextView) (item.getElement().getView()));
@@ -342,40 +352,46 @@ public class AttrsDialog extends Dialog {
                             }
                         } else if (item.getType() == EditTextItem.Type.TYPE_WIDTH) {
                             View view = item.getElement().getView();
-                            int width = dip2px(Integer.valueOf(s.toString()));
-                            if (Math.abs(width - view.getWidth()) >= dip2px(1)) {
+                            Integer widthSize = Integer.valueOf(s.toString());
+                            int width = usePxUnit ? widthSize : dip2px(widthSize);
+                            if (Math.abs(width - view.getWidth()) > 0) {
                                 view.getLayoutParams().width = width;
                                 view.requestLayout();
                             }
                         } else if (item.getType() == EditTextItem.Type.TYPE_HEIGHT) {
                             View view = item.getElement().getView();
-                            int height = dip2px(Integer.valueOf(s.toString()));
-                            if (Math.abs(height - view.getHeight()) >= dip2px(1)) {
+                            Integer heightSize = Integer.valueOf(s.toString());
+                            int height = usePxUnit ? heightSize : dip2px(heightSize);
+                            if (Math.abs(height - view.getHeight()) > 0) {
                                 view.getLayoutParams().height = height;
                                 view.requestLayout();
                             }
                         } else if (item.getType() == EditTextItem.Type.TYPE_PADDING_LEFT) {
                             View view = item.getElement().getView();
-                            int paddingLeft = dip2px(Integer.valueOf(s.toString()));
-                            if (Math.abs(paddingLeft - view.getPaddingLeft()) >= dip2px(1)) {
+                            Integer paddingSize = Integer.valueOf(s.toString());
+                            int paddingLeft = usePxUnit ? paddingSize : dip2px(paddingSize);
+                            if (Math.abs(paddingLeft - view.getPaddingLeft()) > 0) {
                                 view.setPadding(paddingLeft, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
                             }
                         } else if (item.getType() == EditTextItem.Type.TYPE_PADDING_RIGHT) {
                             View view = item.getElement().getView();
-                            int paddingRight = dip2px(Integer.valueOf(s.toString()));
-                            if (Math.abs(paddingRight - view.getPaddingRight()) >= dip2px(1)) {
+                            Integer paddingSize = Integer.valueOf(s.toString());
+                            int paddingRight = usePxUnit ? paddingSize : dip2px(paddingSize);
+                            if (Math.abs(paddingRight - view.getPaddingRight()) > 0) {
                                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), paddingRight, view.getPaddingBottom());
                             }
                         } else if (item.getType() == EditTextItem.Type.TYPE_PADDING_TOP) {
                             View view = item.getElement().getView();
-                            int paddingTop = dip2px(Integer.valueOf(s.toString()));
-                            if (Math.abs(paddingTop - view.getPaddingTop()) >= dip2px(1)) {
+                            Integer paddingSize = Integer.valueOf(s.toString());
+                            int paddingTop = usePxUnit ? paddingSize : dip2px(paddingSize);
+                            if (Math.abs(paddingTop - view.getPaddingTop()) > 0) {
                                 view.setPadding(view.getPaddingLeft(), paddingTop, view.getPaddingRight(), view.getPaddingBottom());
                             }
                         } else if (item.getType() == EditTextItem.Type.TYPE_PADDING_BOTTOM) {
                             View view = item.getElement().getView();
-                            int paddingBottom = dip2px(Integer.valueOf(s.toString()));
-                            if (Math.abs(paddingBottom - view.getPaddingBottom()) >= dip2px(1)) {
+                            Integer paddingSize = Integer.valueOf(s.toString());
+                            int paddingBottom = usePxUnit ? paddingSize : dip2px(paddingSize);
+                            if (Math.abs(paddingBottom - view.getPaddingBottom()) >= 0) {
                                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), paddingBottom);
                             }
                         }
@@ -395,7 +411,7 @@ public class AttrsDialog extends Dialog {
                 vName = itemView.findViewById(R.id.name);
                 vDetail = itemView.findViewById(R.id.detail);
                 vColor = itemView.findViewById(R.id.color);
-                // vDetail.addTextChangedListener(textWatcher);
+                vDetail.addTextChangedListener(textWatcher);
             }
 
             public static EditTextViewHolder newInstance(ViewGroup parent) {

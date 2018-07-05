@@ -49,11 +49,11 @@ public class UETCore implements IAttrs {
 
         Pair<String, String> sizeLabelAndText = makeSizeLabelAndText("Width", view.getWidth(), usePxUnit);
         items.add(new AddMinusEditItem(sizeLabelAndText.first, element, EditTextItem.Type.TYPE_WIDTH,
-                sizeLabelAndText.second));
+                sizeLabelAndText.second, usePxUnit));
 
         sizeLabelAndText = makeSizeLabelAndText("Height", view.getHeight(), usePxUnit);
         items.add(new AddMinusEditItem(sizeLabelAndText.first, element, EditTextItem.Type.TYPE_HEIGHT,
-                sizeLabelAndText.second));
+                sizeLabelAndText.second, usePxUnit));
         items.add(new TextItem("Alpha", String.valueOf(view.getAlpha())));
         Object background = Util.getBackground(view);
         if (background instanceof String) {
@@ -63,19 +63,19 @@ public class UETCore implements IAttrs {
         }
         sizeLabelAndText = makeSizeLabelAndText("PaddingLeft", view.getPaddingLeft(), usePxUnit);
         items.add(new AddMinusEditItem(sizeLabelAndText.first, element, EditTextItem.Type.TYPE_PADDING_LEFT,
-                sizeLabelAndText.second));
+                sizeLabelAndText.second, usePxUnit));
 
         sizeLabelAndText = makeSizeLabelAndText("PaddingTop", view.getPaddingTop(), usePxUnit);
         items.add(new AddMinusEditItem(sizeLabelAndText.first, element, EditTextItem.Type.TYPE_PADDING_TOP,
-                sizeLabelAndText.second));
+                sizeLabelAndText.second, usePxUnit));
 
         sizeLabelAndText = makeSizeLabelAndText("PaddingRight", view.getPaddingRight(), usePxUnit);
         items.add(new AddMinusEditItem(sizeLabelAndText.first, element, EditTextItem.Type.TYPE_PADDING_RIGHT,
-                sizeLabelAndText.second));
+                sizeLabelAndText.second, usePxUnit));
 
         sizeLabelAndText = makeSizeLabelAndText("PaddingBottom", view.getPaddingBottom(), usePxUnit);
         items.add(new AddMinusEditItem(sizeLabelAndText.first, element, EditTextItem.Type.TYPE_PADDING_BOTTOM,
-                sizeLabelAndText.second));
+                sizeLabelAndText.second, usePxUnit));
 
         return items;
     }
@@ -112,7 +112,7 @@ public class UETCore implements IAttrs {
             float textSizeInPx = textView.getTextSize();
             String textSizeText = usePxUnit ? String.valueOf((int)textSizeInPx) : px2sp(textSizeInPx);
             String textSizeLabel = usePxUnit ? "TextSize (px) " : "TextSize（sp）";
-            items.add(new AddMinusEditItem(textSizeLabel, element, EditTextItem.Type.TYPE_TEXT_SIZE, textSizeText));
+            items.add(new AddMinusEditItem(textSizeLabel, element, EditTextItem.Type.TYPE_TEXT_SIZE, textSizeText, usePxUnit));
             items.add(new EditTextItem("TextColor", element, EditTextItem.Type.TYPE_TEXT_COLOR, Util.intToHexColor(textView.getCurrentTextColor())));
             List<Pair<String, Bitmap>> pairs = Util.getTextViewBitmap(textView);
             for (Pair<String, Bitmap> pair : pairs) {

@@ -23,10 +23,19 @@ public class EditTextItem extends ElementItem {
     int type;
     private String detail;
 
+    private boolean usePxUnit;
+
     public EditTextItem(String name, Element element, @Type int type, String detail) {
         super(name, element);
         this.type = type;
         this.detail = detail;
+    }
+
+    public EditTextItem(String name, Element element, @Type int type, String detail, boolean usePxUnit) {
+        super(name, element);
+        this.type = type;
+        this.detail = detail;
+        this.usePxUnit = usePxUnit;
     }
 
     public String getDetail() {
@@ -35,6 +44,10 @@ public class EditTextItem extends ElementItem {
 
     public int getType() {
         return type;
+    }
+
+    public boolean isUsePxUnit() {
+        return usePxUnit;
     }
 
     @IntDef({
